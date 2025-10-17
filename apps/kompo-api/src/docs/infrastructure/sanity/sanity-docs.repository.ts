@@ -5,7 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { GetDocsWithIdDto, GetDocsWithIdInterface } from '@kompo/types';
+import {
+  GetAllSlug,
+  GetDocsWithIdDto,
+  GetDocsWithIdInterface,
+} from '@kompo/types';
 import { DocsRepository } from '../../core/application/port/docs.repository';
 import { sanityClient } from '../../../shared/infrastructure/sanity-client';
 
@@ -60,6 +64,27 @@ export class SanityDocsRepository implements DocsRepository {
       this.logger.error('Failed to fetch all docs', err.stack || err.message);
       throw new InternalServerErrorException(
         'Erreur lors de la récupération des documents.',
+      );
+    }
+  }
+
+  async getAllSlugs(): Promise<GetAllSlug[]> {
+    const client = sanityClient(this.configService);
+    const query = `*[_type == "docs"]{slug}`;
+    try {
+      const result: GetAllSlug[] = await client.fetch(query);
+
+      if (!result) {
+        this.logger.warn(`Slugs not found`);
+        throw new NotFoundException(`Slugs non trouvé.`);
+      }
+
+      return result;
+    } catch (error) {
+      const err = error as Error;
+      this.logger.error('Failed to fetch all slugs', err.stack || err.message);
+      throw new InternalServerErrorException(
+        'Erreur lors de la récupération des slugs.',
       );
     }
   }
