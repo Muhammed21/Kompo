@@ -1,0 +1,19 @@
+@import './font/docs-font.css';
+
+:root {
+    --vp-font-family-base: 'Geist', sans-serif;
+    --vp-button-brand-bg: #42b983;
+    --vp-button-brand-hover-bg: #369870;
+    --vp-button-brand-border: transparent;
+    --vp-button-brand-text: #fff;
+    --vp-button-brand-hover-text: #fff;
+}
+
+body {
+    font-family: var(--vp-font-family-base);
+}
+
+.VPButton {
+    border-radius: 8px;
+    font-weight: bold;
+}
