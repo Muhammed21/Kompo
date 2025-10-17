@@ -1,9 +1,9 @@
 import {defineField, defineType} from 'sanity'
 import {SheetIcon} from '../../ui/icons/sheet'
 
-export const ComponentSheetType = defineType({
-  name: 'componentSheet',
-  title: 'Component Sheet',
+export const DocsType = defineType({
+  name: 'docs',
+  title: 'Docs',
   type: 'document',
   icon: SheetIcon,
   fields: [
