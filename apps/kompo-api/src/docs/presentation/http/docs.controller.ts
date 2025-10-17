@@ -6,9 +6,11 @@ import { DocsRepository } from '../../core/application/port/docs.repository';
 export class DocsController {
   constructor(private readonly repository: DocsRepository) {}
 
-  @Get(':id')
-  async getOneDocs(@Param('id') id: string): Promise<GetDocsWithIdInterface> {
-    return this.repository.getOneDocs({ id } as GetDocsWithIdDto);
+  @Get(':param')
+  async getOneDocs(
+    @Param() param: GetDocsWithIdDto,
+  ): Promise<GetDocsWithIdInterface> {
+    return this.repository.getOneDocs(param);
   }
 
   @Get()

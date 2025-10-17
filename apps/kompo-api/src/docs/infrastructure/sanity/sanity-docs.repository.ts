@@ -17,22 +17,24 @@ export class SanityDocsRepository implements DocsRepository {
 
   async getOneDocs(dto: GetDocsWithIdDto): Promise<GetDocsWithIdInterface> {
     const client = sanityClient(this.configService);
-    const query = `*[_type == "docs" && _id == $id][0]{_id, _createdAt, title, description, body, slug}`;
-    const params = { id: dto.id };
+    const query = `*[_type == "docs" && (_id == $param || slug.current == $param)][0]{_id, _createdAt, title, description, body, slug}`;
+    const param = { param: dto.param };
 
     try {
-      const result: GetDocsWithIdInterface = await client.fetch(query, params);
+      const result: GetDocsWithIdInterface = await client.fetch(query, param);
 
       if (!result) {
-        this.logger.warn(`Document not found for id: ${dto.id}`);
-        throw new NotFoundException(`Document avec l'id ${dto.id} non trouvé.`);
+        this.logger.warn(`Document not found for id: ${dto.param}`);
+        throw new NotFoundException(
+          `Document avec le parametre ${dto.param} non trouvé.`,
+        );
       }
 
       return result;
     } catch (error) {
       const err = error as Error;
       this.logger.error(
-        `Failed to fetch doc with id ${dto.id}`,
+        `Failed to fetch doc with id ${dto.param}`,
         err.stack || err.message,
       );
       throw new InternalServerErrorException(
