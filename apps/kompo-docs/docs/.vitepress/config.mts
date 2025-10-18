@@ -1,28 +1,37 @@
 import { defineConfig } from "vitepress";
+// @ts-ignore
+import { GetAllSlug } from "@kompo/types";
 
-// https://vitepress.dev/reference/site-config
-export default defineConfig({
-  title: "Kompo-docs",
-  description: "UI Components docs",
-  themeConfig: {
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: "Home", link: "/" },
-      { text: "Examples", link: "/markdown-examples" },
-    ],
+async function getAllSlugs(): Promise<GetAllSlug[]> {
+  const response = await fetch("http://localhost:8080/docs/slugs/all");
+  const slugs = await response.json();
+  return slugs;
+}
 
-    sidebar: [
-      {
-        text: "Examples",
-        items: [
-          { text: "Markdown Examples", link: "/markdown-examples" },
-          { text: "Runtime API Examples", link: "/api-examples" },
-        ],
-      },
-    ],
+export default async function () {
+  const slugs = await getAllSlugs();
 
-    socialLinks: [
-      { icon: "github", link: "https://github.com/vuejs/vitepress" },
-    ],
-  },
-});
+  const nav = slugs.map((slug) => ({
+    text: slug.slug.current,
+    link: `/components/${slug.slug.current}`,
+  }));
+
+  return defineConfig({
+    title: "Kompo-docs",
+    description: "UI Components docs",
+    themeConfig: {
+      nav,
+
+      sidebar: [
+        {
+          text: "Examples",
+          items: nav,
+        },
+      ],
+
+      socialLinks: [
+        { icon: "github", link: "https://github.com/Muhammed21/kompo" },
+      ],
+    },
+  });
+}
