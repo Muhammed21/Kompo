@@ -13,8 +13,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@kompo/types": "workspace:*",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "vitepress": "2.0.0-alpha.12"
+  },
+  "dependencies": {
+    "@portabletext/vue": "^1.0.14",
+    "@sanity/block-content-to-markdown": "^1.0.0",
+    "marked": "^16.4.1"
   }
 }
